@@ -1,0 +1,15 @@
+{
+  "name": "nodeejercicio",
+  "version": "1.0.0",
+  "description": "npmExample",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "jhon vasquez",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^7.4.0"
+  }
+}
