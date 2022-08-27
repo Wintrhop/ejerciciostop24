@@ -19,7 +19,7 @@ const newarr = arr.map(item => item *2);
 console.log(newarr);
 
 const filterarray = arr.filter(item => {
-    if(item % 2 === 0) return item
+    return item % 2 === 0;
 })
 console.log(filterarray);
 
@@ -47,14 +47,14 @@ Create a function bmwSum that returns the sum of all prices of the BMW cars. */
 
 function ferraris(cars) {
     const filterferrari = cars.filter(item => {
-        if(item.brand === 'Ferrari') return item;
+        return item.brand === 'Ferrari';
     })
     return filterferrari;
 }
 
 function nineties(cars) {
     const filtermodel= cars.filter(item=>{
-        if(item.model > 1980 && item.model < 1990) return item;
+        return item.model > 1980 && item.model < 1990;
     })
     return filtermodel;
 }
@@ -66,17 +66,17 @@ function list(cars) {
 }
 console.log(list(cars));
 
-function bmwSum(cars) {
+/*function bmwFilter(cars) {
     const filterBmw = cars.filter(item=>{
         if (item.brand==='BMW') return item.price;
     })
    return filterBmw;
     
-}
+}*/
 
 function bmwSum(cars) {
     const filterBmw = cars.filter(item=>{
-        if (item.brand==='BMW') return item;
+        return item.brand==='BMW';
     })
     const mapBmw =filterBmw.map(item=> item.price);
     const reduceBmw = mapBmw.reduce((a,b)=> a+b);
