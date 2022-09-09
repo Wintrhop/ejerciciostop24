@@ -1,0 +1,53 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  text-align:center;
+  justify-content: center;
+}
+
+.formik1{
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  
+  align-self: center;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px 0px;
+  background-color: transparent;
+  border-radius: 15px;
+  
+  
+}
+.formik1 label{
+  text-align: left;
+  padding: 10px 2px;
+  
+}
+.formik1 input{
+ height: 30px;
+ border-radius: 5px;
+ 
+ 
+}
+.formik1 button{
+  height: 43px;
+  margin-top: 20px;
+  border: none;
+  background-color: rgb(177, 30, 113);
+  color: white;
+  font-size: 16px;
+  border-radius: 5px;
+}
+.formik1 .error{
+  color: red;
+  padding: 0;
+  margin: 0;
+  font-size: 13px;
+  text-align: left;
+
+}
+.inpNormal{
+  border-color: rgb(197, 197, 197);
+}
+.inpError{
+  border-color: red;
+}
