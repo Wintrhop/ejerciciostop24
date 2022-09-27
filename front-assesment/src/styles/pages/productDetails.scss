@@ -1,0 +1,62 @@
+.detailContainer {
+  padding: 10px 0px;
+  
+
+  .detailHeader {
+    font-size: 24px;
+  }
+  .productDetails {
+    text-align: left;
+    
+    .sectionsFlex {
+      display: flex;
+      font-family: "cereal Book";
+      padding: 0px 10px;
+      align-items: center;
+      .section1 {
+        font-size: 14px;
+        width: 60%;
+      }
+      .section2 {
+        width: 40%;
+        .detailRate {
+          padding-right: 3px;
+        }
+      }
+    }
+    .detailImg {
+      height: 450px;
+      width: 100%;
+      object-fit: scale-down;
+    }
+    .detailDescription {
+      padding: 0px 10px;
+      font-family: "cereal Book";
+    }
+  }
+}
+@media (min-width: 768px) {
+  .sectionsFlex {
+    justify-content: space-between !important;
+    .section1 {
+      width: auto !important;
+    }
+    .section2 {
+      width: auto !important;
+    }
+  }
+}
+@media (min-width: 992px) {
+  .productDetails {
+    width: 70%;
+    margin: 0 auto;
+    
+    
+    
+  }
+}
+@media (min-width: 1200px) {
+  .productDetails{
+    width: 60% !important;
+  }
+}

@@ -1,0 +1,10 @@
+@import "./styles/abstracts/variables.scss";
+@import "./styles/pages/App.scss";
+
+@import "./styles/pages/home.scss";
+
+@import "./styles/base/base.scss";
+
+@import "./styles/components/productCard.scss";
+
+@import "./styles/pages/productDetails.scss";
