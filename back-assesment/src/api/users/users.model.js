@@ -5,11 +5,8 @@ const UsersSchema = new Schema(
   {
     email: {
       type: String,
-      required: [true, "You should enter a email"],
-      match: [
-        emailRegex,
-        " You should enter a valid email example@example.com",
-      ],
+      required: [true, "Please Enter an Email"],
+      match: [emailRegex, " You must enter a valid email example@example.com"],
       validate: [
         {
           async validator(value) {
@@ -25,10 +22,23 @@ const UsersSchema = new Schema(
       ],
     },
     password: {
-        type: String,
-        required: [true, 'Debe ingresar una contraseña.'],
-        minlength: [4, 'El password es muy corto'],
+      type: String,
+      required: [true, "you should enter a password."],
+      minlength: [4, "Password must have at least 4 characters"],
+    },
+    favoriteList: {
+      type: {
+        favsName: {
+          type: String,
+          required: false,
+        },
+        favs: {
+          type: [{ type: Schema.Types.ObjectId, ref: "Favs" }],
+          required: false,
+        },
       },
+      required:false,
+    },
   },
   { timestamps: true }
 );
