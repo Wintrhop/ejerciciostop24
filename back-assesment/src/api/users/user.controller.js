@@ -1,4 +1,4 @@
-const User = require("./user.model");
+const Users = require("./users.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -9,7 +9,7 @@ module.exports = {
       const { email, password } = req.body;
       const encPassword = await bcrypt.hash(password, 8);
 
-      const user = await User.create({ email, password: encPassword });
+      const user = await Users.create({ email, password: encPassword });
 
       const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY, {
         expiresIn: 60 * 60 * 24,
@@ -27,7 +27,7 @@ module.exports = {
   async signin(req, res) {
     try {
       const { email, password } = req.body;
-      const user = await User.findOne({ email });
+      const user = await Users.findOne({ email });
       console.log(user);
 
       if (!user) {
@@ -56,7 +56,7 @@ module.exports = {
 
   async list(req, res) {
     try {
-      const user = await User.find();
+      const user = await Users.find();
       res.status(201).json({ message: "user found", data: user });
     } catch (err) {
       res.status(400).json(err);
@@ -93,7 +93,7 @@ module.exports = {
     try {
       const data = req.body;
       const { userId } = req.userId;
-      const user = await User.findByIdAndUpdate(userId, data, { new: true });
+      const user = await Users.findByIdAndUpdate(userId, data, { new: true });
       res.status(200).json({ message: "User Updated", data: user });
     } catch (err) {
       res.status(400).json({ message: "User could not be Updated", data: err });
@@ -103,7 +103,7 @@ module.exports = {
   async destroy(req, res) {
     try {
       const { userId } = req.userId;
-      const user = await User.findByIdAndDelete(userId);
+      const user = await Users.findByIdAndDelete(userId);
       res.status(200).json({ message: "User Deleted", data: user });
     } catch (error) {
       res.status(400).json({ Message: "User could not be Deleted", data: err });
