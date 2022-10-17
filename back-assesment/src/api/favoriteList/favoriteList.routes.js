@@ -4,7 +4,7 @@ const {auth} = require('../../utils/auth')
 
 router.route('/').get(auth,favoritesController.list);
 router.route('/:favListId').get(auth,favoritesController.show);
-router.route('/').post(favoritesController.create);
+router.route('/').post(auth,favoritesController.create);
 outer.route('/:favListId').post(favoritesController.createFav);
 router.route('/:favListId').put(auth, favoritesController.update);
 router.route('/:favListId').delete(auth, favoritesController.destroy);

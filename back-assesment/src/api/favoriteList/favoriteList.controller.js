@@ -11,14 +11,14 @@ module.exports = {
           path: "favoriteList",
           select: "-user email favs",
           });
-          
+
           if(!userList){
             throw new Error('Favorites not found');
           }
         
         res.status(201).json({ message: "Favorites found", data: userList });
       } catch (err) {
-        res.status(400).json(err);
+        res.status(400).json(err.message);
       }
     },
     //getID
@@ -26,7 +26,7 @@ module.exports = {
       try {
         const userAuthId = req.userId;
         const { favListId } = req.params;
-        const {user} = await FavoriteList.findById(favListId)
+        const {user} = await FavoriteList.findById(favListId);
           
                         
         if(!user){
