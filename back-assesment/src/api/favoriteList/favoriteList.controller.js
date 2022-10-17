@@ -7,9 +7,9 @@ module.exports = {
     async list(req, res) {
       try {
         const userAuthId = req.userId;
-        const userList= await Users.findById(userAuthId).select('-_id').populate({
+        const userList= await Users.findById(userAuthId).select('-_id -password').populate({
           path: "favoriteList",
-          select: "-user email favs",
+          select: "-user -email",
           });
 
           if(!userList){
@@ -72,22 +72,24 @@ module.exports = {
     async createFav(req, res){
       try {
         const userAuthId = req.userId;
-        const favListId = req.params;
+        const {favListId} = req.params;
+        
         const data = req.body;
         const {user} = await FavoriteList.findById(favListId)
         
         if (!user) {
-          throw new Error("Invalid User");
+          throw new Error("Invalid list");
         }
+        console.log('auth', userAuthId, 'user', user._id.valueOf());
         if (user._id.valueOf() !== userAuthId) {
           throw new Error("Invalid User");
         }
-        const favList = await FavoriteList.findById(favListId)
-        favList.favs.push(data);
-        await favList.save({ validateBeforeSave: false });
+        const list = await FavoriteList.findById(favListId)
+        list.favs.push(data);
+        await list.save({ validateBeforeSave: false });
         res.status(201).json({ message: "Favorite Added", data: data });
       } catch (error) {
-        res.status(400).json({ message: "Favorite could not be Added", data: err.message });
+        res.status(400).json({ message: "Favorite could not be Added", data: error.message });
       }
     },
     async update(req, res) {
