@@ -7,7 +7,20 @@ const FavoriteListSchema = new Schema(
             required: true,
         },
         favs:{
-            type:[{type:Schema.Types.ObjectId, ref:'Favs'}],
+            type:[{
+                title:{
+                    type: String,
+                    required: false,
+                },
+                description:{
+                    type: String,
+                    required:false,
+                },
+                link:{
+                    type:String,
+                    required:false,
+                },
+            }],
             required:false,
         },
         user:{

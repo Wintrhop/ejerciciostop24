@@ -6,13 +6,17 @@ module.exports = {
     //get all
     async list(req, res) {
       try {
-        const favsList = await FavoriteList.find()
-          .populate({
-            path: "user",
-            select: "-_id email",
-          })
+        const userAuthId = req.userId;
+        const userList= await Users.findById(userAuthId).select('-_id').populate({
+          path: "favoriteList",
+          select: "-user email favs",
+          });
           
-        res.status(201).json({ message: "Favorites found", data: favsList });
+          if(!userList){
+            throw new Error('Favorites not found');
+          }
+        
+        res.status(201).json({ message: "Favorites found", data: userList });
       } catch (err) {
         res.status(400).json(err);
       }
@@ -20,15 +24,20 @@ module.exports = {
     //getID
     async show(req, res) {
       try {
+        const userAuthId = req.userId;
         const { favListId } = req.params;
-        const favList = await FavoriteList.findById(favListId)
-          .populate({ path: "user", select: "-_id email" })
-          .populate({ path: "favs", select: "-_id -user" });
+        const {user} = await FavoriteList.findById(favListId)
           
-        
-        if(!favList){
+                        
+        if(!user){
           throw new Error('Favorites not found');
         }
+        if (user._id.valueOf() !== userAuthId) {
+          throw new Error("Invalid User");
+        }
+        const favList = await FavoriteList.findById(favListId)
+          .populate({ path: "user", select: "-_id email" })
+          
         res.status(201).json({ message: "Favorites found", data: favList });
       } catch (error) {
         
@@ -48,7 +57,7 @@ module.exports = {
         }
         const newFavList = {
           ...data,
-          userId: userId,
+          user: userId,
         };
         const favList = await FavoriteList.create(newFavList);
         
@@ -58,6 +67,27 @@ module.exports = {
         res.status(201).json({ message: "Favorites Created", data: favList });
       } catch (err) {
         res.status(400).json({ message: "Favorites could not be created", data: err.message });
+      }
+    },
+    async createFav(req, res){
+      try {
+        const userAuthId = req.userId;
+        const favListId = req.params;
+        const data = req.body;
+        const {user} = await FavoriteList.findById(favListId)
+        
+        if (!user) {
+          throw new Error("Invalid User");
+        }
+        if (user._id.valueOf() !== userAuthId) {
+          throw new Error("Invalid User");
+        }
+        const favList = await FavoriteList.findById(favListId)
+        favList.favs.push(data);
+        await favList.save({ validateBeforeSave: false });
+        res.status(201).json({ message: "Favorite Added", data: data });
+      } catch (error) {
+        res.status(400).json({ message: "Favorite could not be Added", data: err.message });
       }
     },
     async update(req, res) {
@@ -89,21 +119,21 @@ module.exports = {
       try {
         const userAuthId = req.userId;
         const { favListId } = req.params;
-        let { user } = await Homes.findById(homeId);
+        let { user } = await FavoriteList.findById(favListId);
   
-        if (userId._id.valueOf() !== user) {
-          throw new Error("Usuario invalido");
+        if (user._id.valueOf() !== userAuthId) {
+          throw new Error("Invalid User");
         }
-        const userHom = await Users.findById(userId);
-        const newHomes = userHom.homes.filter(item => homeId !== item.toString());
-        userHom.homes = newHomes;
-        await userHom.save({validateBeforeSave: false});
-        const home = await Homes.findByIdAndDelete(homeId);
-        res.status(200).json({ message: "Home Deleted", data: home });
+        const userFav = await Users.findById(user);
+        const newFavs = userFav.favoriteList.filter(item => favListId !== item.toString());
+        userFav.favoriteList = newFavs;
+        await userFav.save({validateBeforeSave: false});
+        const favList = await FavoriteList.findByIdAndDelete(favListId);
+        res.status(200).json({ message: "Favorites Deleted", data: favList });
       } catch (error) {
         res
           .status(400)
-          .json({ Message: "Home could not be Deleted", data: error.message });
+          .json({ Message: "Favorites could not be Deleted", data: error.message });
       }
     },
   };
