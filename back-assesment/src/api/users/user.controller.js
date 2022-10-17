@@ -7,6 +7,10 @@ module.exports = {
   async signup(req, res) {
     try {
       const { email, password } = req.body;
+
+      if (password.length<5){
+        throw new Error('Password must have at least 5 characters')
+      }
       const encPassword = await bcrypt.hash(password, 8);
 
       const user = await Users.create({ email, password: encPassword });
@@ -56,57 +60,40 @@ module.exports = {
 
   async list(req, res) {
     try {
-      const user = await Users.find();
-      res.status(201).json({ message: "user found", data: user });
+      const user = await Users.find().select('-_id');
+      res.status(201).json({ message: "Users found", data: user });
     } catch (err) {
       res.status(400).json(err);
     }
   },
-  /*
-    //getID
-    async show(req, res) {
-      try {
-        const { userId } = req.params;
-        const user = await User.findById(userId);
-        //populates
-        res.status(201).json({ message: 'user found', data: user });
-      } catch (err) {
-        res.status(400).json(err);
-      }
-    },
-  
-    // post
-  
-    async create(req, res) {
-      try {
-        const data = req.body;
-  
-        const user = await User.create(data);
-  
-        res.status(201).json({ message: 'User Created', data: user });
-      } catch (err) {
-        res.status(400).json({ message: 'User could not be created', data: err });
-      }
-    },
-      */
+ 
   async update(req, res) {
     try {
       const data = req.body;
-      const { userId } = req.userId;
+      const userId = req.userId;
       const user = await Users.findByIdAndUpdate(userId, data, { new: true });
       res.status(200).json({ message: "User Updated", data: user });
     } catch (err) {
-      res.status(400).json({ message: "User could not be Updated", data: err });
+      res.status(400).json({ message: "User could not be Updated", data: err.message });
     }
   },
 
   async destroy(req, res) {
     try {
-      const { userId } = req.userId;
-      const user = await Users.findByIdAndDelete(userId);
-      res.status(200).json({ message: "User Deleted", data: user });
+      const  userAuthId  = req.userId;
+      console.log('auth user', userAuthId)
+      const user = await Users.findById(userAuthId);
+
+      if(!user){
+        throw new Error('User not found');
+      }
+      
+      const delUser = await Users.findByIdAndDelete(userAuthId);
+
+    
+      res.status(200).json({ message: "User Deleted", data: delUser });
     } catch (error) {
-      res.status(400).json({ Message: "User could not be Deleted", data: err });
+      res.status(400).json({ Message: "User could not be Deleted", data: error.message });
     }
   },
 };

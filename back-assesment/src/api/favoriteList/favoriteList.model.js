@@ -30,6 +30,6 @@ const FavoriteListSchema = new Schema(
     },{timestamps:true},
 );
 
-const FavoriteList  = model('FavoriteList', FavsSchema);
+const FavoriteList  = model('FavoriteList', FavoriteListSchema);
 
 module.exports = FavoriteList;

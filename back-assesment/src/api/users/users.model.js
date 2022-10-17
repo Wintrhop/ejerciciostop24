@@ -27,7 +27,7 @@ const UsersSchema = new Schema(
     password: {
         type: String,
         required: [true, 'you should enter a password.'],
-        minlength: [4, 'Password must have at least 4 characters'],
+        
       },
     favoriteList:{
         type:[{type:Schema.Types.ObjectId, ref:'FavoriteList'}],
