@@ -12,13 +12,13 @@ module.exports = {
           select: "-user -email",
           });
 
-          if(!userList){
-            throw new Error('Favorites not found');
+          if(userList.favoriteList.length === 0){
+            throw new Error('favorite List is empty');
           }
         
         res.status(201).json({ message: "Favorites found", data: userList });
       } catch (err) {
-        res.status(400).json(err.message);
+        res.status(400).json({message: "error", error:err.message});
       }
     },
     //getID
@@ -41,7 +41,7 @@ module.exports = {
         res.status(201).json({ message: "Favorites found", data: favList });
       } catch (error) {
         
-        res.status(400).json({message: "error", data: error.message});
+        res.status(400).json({message: "error", error: error.message});
       }
     },
     // post
@@ -66,7 +66,7 @@ module.exports = {
   
         res.status(201).json({ message: "Favorites Created", data: favList });
       } catch (err) {
-        res.status(400).json({ message: "Favorites could not be created", data: err.message });
+        res.status(400).json({ message: "Favorites could not be created", error: err.message });
       }
     },
     async createFav(req, res){
@@ -80,7 +80,7 @@ module.exports = {
         if (!user) {
           throw new Error("Invalid list");
         }
-        console.log('auth', userAuthId, 'user', user._id.valueOf());
+      
         if (user._id.valueOf() !== userAuthId) {
           throw new Error("Invalid User");
         }
@@ -89,7 +89,7 @@ module.exports = {
         await list.save({ validateBeforeSave: false });
         res.status(201).json({ message: "Favorite Added", data: data });
       } catch (error) {
-        res.status(400).json({ message: "Favorite could not be Added", data: error.message });
+        res.status(400).json({ message: "Favorite could not be Added", error: error.message });
       }
     },
     async update(req, res) {
@@ -114,7 +114,7 @@ module.exports = {
       } catch (error) {
         res
           .status(400)
-          .json({ message: "Favorites could not be Updated", data: error.message });
+          .json({ message: "Favorites could not be Updated", error: error.message });
       }
     },
     async destroy(req, res) {
@@ -135,7 +135,7 @@ module.exports = {
       } catch (error) {
         res
           .status(400)
-          .json({ Message: "Favorites could not be Deleted", data: error.message });
+          .json({ Message: "Favorites could not be Deleted", error: error.message });
       }
     },
   };

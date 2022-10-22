@@ -1,15 +1,34 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
-function connect() {
-    const mongoUri = process.env.MONGO_URI
-    
-    mongoose.connect(mongoUri)
-    mongoose.connection.once("open",()=>{
-        console.log("connection with mongo OK")
-    })
-    mongoose.connection.on("error", (err)=>{
-        console.log("something wen wrong!", err)
-    })
-    return mongoose.connection
+let connection;
+
+async function connect() {
+  if (connection) return;
+
+  const mongoUri = process.env.MONGO_URI;
+  connection = mongoose.connection;
+
+  connection.once("open", () => {
+    console.log("connection with mongo OK");
+  });
+  connection.on("disconnected", () => {
+    console.log("Disconnected succesfull");
+  });
+  connection.on("error", (err) => {
+    console.log("something went wrong!", err);
+  });
+
+  await mongoose.connect(
+    "mongodb+srv://Admin:FsK4fYPkMIU5YV4T@cluster0.2xgv8.mongodb.net/favs-test?retryWrites=true&w=majority"
+  );
 }
-module.exports ={connect}
+async function disconnected() {
+  if (!connection) return;
+  await mongoose.disconnect();
+}
+async function cleanup() {
+  for (const collection in connection.collections) {
+    await connection.collections[collection].deleteMany({});
+  }
+}
+module.exports = { connect, disconnected, cleanup };

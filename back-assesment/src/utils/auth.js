@@ -20,6 +20,6 @@ exports.auth = (req, res, next) => {
   } catch (err) {
     res
       .status(401)
-      .json({ message: "something went wrong with token", data: err.message });
+      .json({ message: "something went wrong with token", error: err.message });
   }
 };

@@ -8,8 +8,8 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      if (password.length<5){
-        throw new Error('Password must have at least 5 characters')
+      if (password.length<5) {
+        throw new Error("Password must have at least 5 characters");
       }
       const encPassword = await bcrypt.hash(password, 8);
 
@@ -32,8 +32,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
       const user = await Users.findOne({ email });
-      console.log(user);
-
+      
       if (!user) {
         throw new Error("Email or password invalid");
       }
@@ -54,19 +53,19 @@ module.exports = {
     } catch (err) {
       res
         .status(400)
-        .json({ message: "User could not login", data: err.message });
+        .json({ message: "User could not login", error: err.message });
     }
   },
 
   async list(req, res) {
     try {
-      const user = await Users.find().select('-_id');
+      const user = await Users.find().select("-_id");
       res.status(201).json({ message: "Users found", data: user });
     } catch (err) {
       res.status(400).json(err);
     }
   },
- 
+
   async update(req, res) {
     try {
       const data = req.body;
@@ -74,26 +73,29 @@ module.exports = {
       const user = await Users.findByIdAndUpdate(userId, data, { new: true });
       res.status(200).json({ message: "User Updated", data: user });
     } catch (err) {
-      res.status(400).json({ message: "User could not be Updated", data: err.message });
+      res
+        .status(400)
+        .json({ message: "User could not be Updated", error: err.message });
     }
   },
 
   async destroy(req, res) {
     try {
-      const  userAuthId  = req.userId;
-      console.log('auth user', userAuthId)
+      const userAuthId = req.userId;
+      console.log("auth user", userAuthId);
       const user = await Users.findById(userAuthId);
 
-      if(!user){
-        throw new Error('User not found');
+      if (!user) {
+        throw new Error("User not found");
       }
-      
+
       const delUser = await Users.findByIdAndDelete(userAuthId);
 
-    
       res.status(200).json({ message: "User Deleted", data: delUser });
     } catch (error) {
-      res.status(400).json({ Message: "User could not be Deleted", data: error.message });
+      res
+        .status(400)
+        .json({ Message: "User could not be Deleted", error: error.message });
     }
   },
 };
